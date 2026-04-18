@@ -7,46 +7,42 @@ import { useAuth } from "@/lib/auth-context"
 import {
   Shield,
   LayoutDashboard,
-  Package,
-  ShoppingCart,
-  BarChart3,
+  Users,
+  CreditCard,
+  FileCheck,
   Settings,
-  Store,
-  MessageSquare,
   LogOut,
-  ExternalLink,
+  Crown,
 } from "lucide-react"
 
 const navigation = [
-  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Products", href: "/dashboard/products", icon: Package },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-  { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
-  { name: "Messages", href: "/dashboard/messages", icon: MessageSquare },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "Overview", href: "/admin", icon: LayoutDashboard },
+  { name: "Subscribers", href: "/admin/subscribers", icon: Users },
+  { name: "Revenue", href: "/admin/revenue", icon: CreditCard },
+  { name: "Verifications", href: "/admin/verifications", icon: FileCheck },
+  { name: "Settings", href: "/admin/settings", icon: Settings },
 ]
 
-export function DashboardSidebar() {
+export function AdminSidebar() {
   const pathname = usePathname()
   const { logout, user } = useAuth()
-
-  const handlePreviewStore = () => {
-    window.open("/store", "_blank")
-  }
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
       <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary">
-          <Shield className="h-5 w-5 text-sidebar-primary-foreground" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500">
+          <Crown className="h-5 w-5 text-white" />
         </div>
-        <span className="text-xl font-bold text-sidebar-foreground">Trustify</span>
+        <div>
+          <span className="text-xl font-bold text-sidebar-foreground">Trustify</span>
+          <span className="ml-1 rounded bg-amber-500/20 px-1.5 py-0.5 text-xs font-medium text-amber-400">Admin</span>
+        </div>
       </div>
 
       {user && (
         <div className="border-b border-sidebar-border px-4 py-3">
           <p className="text-sm font-medium text-sidebar-foreground">{user.name}</p>
-          <p className="text-xs text-sidebar-foreground/60">{user.storeName || user.email}</p>
+          <p className="text-xs text-sidebar-foreground/60">Administrator</p>
         </div>
       )}
 
@@ -72,19 +68,12 @@ export function DashboardSidebar() {
       </nav>
 
       <div className="border-t border-sidebar-border p-3 space-y-1">
-        <button
-          onClick={handlePreviewStore}
-          className="flex w-full items-center gap-3 rounded-lg bg-sidebar-primary/10 px-3 py-2.5 text-sm font-medium text-sidebar-primary transition-colors hover:bg-sidebar-primary/20"
-        >
-          <ExternalLink className="h-5 w-5" />
-          Preview Store
-        </button>
         <Link
-          href="/store"
+          href="/"
           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
-          <Store className="h-5 w-5" />
-          View Storefront
+          <Shield className="h-5 w-5" />
+          Main Site
         </Link>
         <button
           onClick={logout}

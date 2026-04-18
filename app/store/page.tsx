@@ -4,21 +4,27 @@ import { useState } from "react"
 import { StoreHeader } from "@/components/store/store-header"
 import { ProductGrid } from "@/components/store/product-grid"
 import { AIChatWidget } from "@/components/store/ai-chat-widget"
+import { ContactFormWidget } from "@/components/store/contact-form-widget"
+import { useStore } from "@/lib/store-context"
 import { type Product } from "@/components/store/product-card"
 
 export default function StorePage() {
   const [cartItems, setCartItems] = useState<Product[]>([])
+  const { settings, isLoading } = useStore()
 
   const handleAddToCart = (product: Product) => {
     setCartItems((prev) => [...prev, product])
   }
 
+  // Show store name from settings or default
+  const storeName = settings.storeName || "Tech Zone Store"
+
   return (
     <div className="min-h-screen bg-background">
-      <StoreHeader cartCount={cartItems.length} />
+      <StoreHeader cartCount={cartItems.length} storeName={storeName} />
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Tech Zone Store</h1>
+          <h1 className="text-3xl font-bold text-foreground">{storeName}</h1>
           <p className="mt-2 text-muted-foreground">
             Discover the latest tech accessories and electronics
           </p>
@@ -42,7 +48,10 @@ export default function StorePage() {
         <ProductGrid onAddToCart={handleAddToCart} />
       </main>
       
-      <AIChatWidget />
+      {/* Conditional rendering: AI Chat Widget or Contact Form based on settings */}
+      {!isLoading && (
+        settings.aiEnabled ? <AIChatWidget /> : <ContactFormWidget />
+      )}
     </div>
   )
 }

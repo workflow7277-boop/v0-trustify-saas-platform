@@ -7,9 +7,10 @@ import { useState } from "react"
 
 interface StoreHeaderProps {
   cartCount?: number
+  storeName?: string
 }
 
-export function StoreHeader({ cartCount = 0 }: StoreHeaderProps) {
+export function StoreHeader({ cartCount = 0, storeName = "Tech Zone" }: StoreHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -19,7 +20,7 @@ export function StoreHeader({ cartCount = 0 }: StoreHeaderProps) {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
             <Shield className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">Tech Zone</span>
+          <span className="text-xl font-bold text-foreground">{storeName}</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
