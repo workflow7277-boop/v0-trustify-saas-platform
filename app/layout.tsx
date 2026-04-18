@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/lib/auth-context'
 import { StoreProvider } from '@/lib/store-context'
+import { AdminProvider } from '@/lib/admin-context'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -40,9 +41,11 @@ export default function RootLayout({
     <html lang="en" className="bg-background">
       <body className="font-sans antialiased">
         <AuthProvider>
-          <StoreProvider>
-            {children}
-          </StoreProvider>
+          <AdminProvider>
+            <StoreProvider>
+              {children}
+            </StoreProvider>
+          </AdminProvider>
         </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
