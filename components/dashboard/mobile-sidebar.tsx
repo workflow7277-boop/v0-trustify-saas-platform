@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/lib/auth-context"
 import {
   Shield,
   LayoutDashboard,
@@ -14,6 +15,7 @@ import {
   MessageSquare,
   LogOut,
   X,
+  ExternalLink,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -33,6 +35,17 @@ interface MobileSidebarProps {
 
 export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   const pathname = usePathname()
+  const { logout, user } = useAuth()
+
+  const handlePreviewStore = () => {
+    window.open("/store", "_blank")
+    onClose()
+  }
+
+  const handleLogout = () => {
+    onClose()
+    logout()
+  }
 
   if (!open) return null
 
@@ -51,6 +64,13 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             <X className="h-5 w-5" />
           </Button>
         </div>
+
+        {user && (
+          <div className="border-b border-sidebar-border px-4 py-3">
+            <p className="text-sm font-medium text-sidebar-foreground">{user.name}</p>
+            <p className="text-xs text-sidebar-foreground/60">{user.storeName || user.email}</p>
+          </div>
+        )}
 
         <nav className="flex-1 space-y-1 px-3 py-4">
           {navigation.map((item) => {
@@ -74,7 +94,14 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
           })}
         </nav>
 
-        <div className="border-t border-sidebar-border p-3">
+        <div className="border-t border-sidebar-border p-3 space-y-1">
+          <button
+            onClick={handlePreviewStore}
+            className="flex w-full items-center gap-3 rounded-lg bg-sidebar-primary/10 px-3 py-2.5 text-sm font-medium text-sidebar-primary transition-colors hover:bg-sidebar-primary/20"
+          >
+            <ExternalLink className="h-5 w-5" />
+            Preview Store
+          </button>
           <Link
             href="/store"
             onClick={onClose}
@@ -83,14 +110,13 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             <Store className="h-5 w-5" />
             View Storefront
           </Link>
-          <Link
-            href="/"
-            onClick={onClose}
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-destructive/80 transition-colors hover:bg-destructive/10 hover:text-destructive"
           >
             <LogOut className="h-5 w-5" />
-            Back to Home
-          </Link>
+            Logout
+          </button>
         </div>
       </aside>
     </>
