@@ -1,7 +1,9 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, DollarSign, TrendingUp, Clock, CheckCircle, AlertCircle } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Users, DollarSign, TrendingUp, Clock, CheckCircle, AlertCircle, Zap, Crown, Gift } from "lucide-react"
 
 const stats = [
   {
@@ -94,6 +96,44 @@ export default function AdminDashboard() {
               </Card>
             ))}
           </div>
+
+          {/* Quick Actions - Super Admin Tools */}
+          <Card className="border-amber-500/30 bg-gradient-to-r from-amber-500/5 to-amber-600/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-amber-500" />
+                Super Admin Quick Actions
+              </CardTitle>
+              <CardDescription>
+                Powerful tools for managing users, promos, and VIP access
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
+                  <Link href="/admin/users">
+                    <Zap className="h-6 w-6 text-amber-500" />
+                    <span className="font-medium">Free Pass Activation</span>
+                    <span className="text-xs text-muted-foreground">Bypass payment verification</span>
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
+                  <Link href="/admin/users">
+                    <Gift className="h-6 w-6 text-primary" />
+                    <span className="font-medium">Promo Codes</span>
+                    <span className="text-xs text-muted-foreground">Create 100% discount codes</span>
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="h-auto flex-col gap-2 py-4">
+                  <Link href="/admin/users">
+                    <Crown className="h-6 w-6 text-purple-600" />
+                    <span className="font-medium">VIP Whitelist</span>
+                    <span className="text-xs text-muted-foreground">Auto Business Plan access</span>
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Pending Verifications */}

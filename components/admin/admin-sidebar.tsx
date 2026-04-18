@@ -13,10 +13,12 @@ import {
   Settings,
   LogOut,
   Crown,
+  UserCog,
 } from "lucide-react"
 
 const navigation = [
   { name: "Overview", href: "/admin", icon: LayoutDashboard },
+  { name: "User Management", href: "/admin/users", icon: UserCog },
   { name: "Subscribers", href: "/admin/subscribers", icon: Users },
   { name: "Revenue", href: "/admin/revenue", icon: CreditCard },
   { name: "Verifications", href: "/admin/verifications", icon: FileCheck },
