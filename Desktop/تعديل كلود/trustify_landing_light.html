@@ -1,0 +1,313 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#B8860B;--gold-bright:#D4AF37;--gold-light:#F5E6A3;--gold-pale:#FFFBEB;
+  --bg:#F8F6F1;--surface:#FFFFFF;--surface2:#F3F0E8;--surface3:#EAE6D8;
+  --text:#1A1612;--text2:#5C5244;--text3:#9A8E7E;
+  --border:#E2D9C8;--border2:#C8B878;
+  --green:#1A6B3A;--orange:#B85C00;--red:#9B2020;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans,'Inter',sans-serif)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:50}
+.nav-logo{font-size:18px;font-weight:500;color:var(--gold);letter-spacing:0.5px}
+.nav-logo span{color:var(--text3);font-size:11px;display:block;font-weight:400}
+.nav-links{display:flex;gap:24px}
+.nav-link{font-size:13px;color:var(--text2);cursor:pointer;transition:color 0.15s}
+.nav-link:hover{color:var(--gold)}
+.nav-cta{display:flex;gap:8px}
+.btn{padding:8px 18px;border-radius:6px;font-size:13px;cursor:pointer;border:1px solid;font-family:inherit;transition:all 0.15s}
+.btn-outline{background:transparent;border-color:var(--border2);color:var(--gold)}
+.btn-outline:hover{background:var(--gold-pale);border-color:var(--gold)}
+.btn-gold{background:var(--gold);border-color:var(--gold);color:#FFF;font-weight:500}
+.btn-gold:hover{background:var(--gold-bright);border-color:var(--gold-bright)}
+.btn-lg{padding:13px 30px;font-size:14px;border-radius:8px}
+.btn-xl{padding:15px 36px;font-size:15px;border-radius:8px}
+
+.hero{padding:72px 32px 56px;text-align:center;max-width:820px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-pale);border:1px solid var(--border2);border-radius:20px;padding:6px 16px;font-size:11px;color:var(--gold);margin-bottom:28px;letter-spacing:0.3px}
+.badge-dot{width:6px;height:6px;background:var(--gold-bright);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero-title{font-size:40px;font-weight:500;line-height:1.2;color:var(--text);margin-bottom:18px}
+.hero-title em{color:var(--gold);font-style:normal}
+.hero-sub{font-size:16px;color:var(--text2);line-height:1.7;max-width:560px;margin:0 auto 34px}
+.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;align-items:center}
+.trial-info{font-size:11px;color:var(--text3);margin-top:10px}
+
+.timer-banner{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:18px 28px;margin:0 32px 40px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.timer-label strong{color:var(--gold);display:block;font-size:14px;margin-bottom:2px}
+.timer-label{font-size:12px;color:var(--text2)}
+.timer-digits{display:flex;gap:8px;align-items:center}
+.timer-block{text-align:center}
+.timer-num{background:var(--gold-pale);border:1px solid var(--border2);border-radius:6px;padding:8px 14px;font-size:22px;font-weight:500;color:var(--gold);min-width:52px;display:block}
+.timer-unit{font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:0.5px}
+.timer-sep{font-size:20px;color:var(--gold);margin-bottom:18px}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:0}
+.stat-item{background:var(--surface);padding:24px 16px;text-align:center}
+.stat-num{font-size:28px;font-weight:500;color:var(--gold);display:block}
+.stat-desc{font-size:11px;color:var(--text3);margin-top:4px}
+
+.section{padding:48px 32px;max-width:900px;margin:0 auto}
+.section-label{font-size:10px;color:var(--gold);letter-spacing:2px;text-align:center;margin-bottom:10px;text-transform:uppercase}
+.section-title{font-size:26px;font-weight:500;text-align:center;color:var(--text);margin-bottom:32px}
+
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;transition:all 0.2s}
+.feat-card:hover{border-color:var(--border2);background:var(--gold-pale)}
+.feat-icon{font-size:20px;margin-bottom:10px;display:block}
+.feat-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:5px}
+.feat-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.plan-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 20px;position:relative}
+.plan-card.featured{border-color:var(--gold);background:var(--gold-pale)}
+.plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#FFF;font-size:10px;font-weight:500;padding:3px 14px;border-radius:20px;white-space:nowrap}
+.plan-name{font-size:11px;color:var(--text3);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase}
+.plan-price{font-size:30px;font-weight:500;color:var(--text);margin-bottom:4px}
+.plan-price span{font-size:13px;color:var(--text3);font-weight:400}
+.plan-desc{font-size:12px;color:var(--text2);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.plan-features{list-style:none;margin-bottom:20px}
+.plan-features li{font-size:12px;color:var(--text2);padding:5px 0;display:flex;gap:8px;align-items:flex-start}
+.plan-check{color:var(--green);font-size:11px;margin-top:2px}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:36px;max-width:440px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.12)}
+.modal-icon{font-size:32px;margin-bottom:14px}
+.modal-title{font-size:20px;font-weight:500;color:var(--text);margin-bottom:10px}
+.modal-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:22px}
+.modal-input-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;text-align:left}
+.modal-input-row label{font-size:11px;color:var(--text2)}
+.modal-input-row input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:10px 12px;outline:none;font-family:inherit;width:100%}
+.modal-input-row input:focus{border-color:var(--gold)}
+.warning-box{background:var(--gold-pale);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:11px;color:var(--text2);text-align:left;margin-bottom:18px;line-height:1.6}
+
+.lock-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px}
+.lock-card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:40px;max-width:460px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+.lock-icon{font-size:44px;margin-bottom:14px}
+.lock-title{font-size:22px;font-weight:500;color:var(--text);margin-bottom:10px}
+.lock-sub{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:24px}
+.lock-pills{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.lock-pill{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:12px;color:var(--text2)}
+
+.hidden{display:none}
+footer{padding:22px 32px;border-top:1px solid var(--border);text-align:center;background:var(--surface)}
+.footer-text{font-size:11px;color:var(--text3)}
+</style>
+
+<h2 class="sr-only">Trustify light-theme landing page with 6-hour trial engine and pricing for Egyptian merchants</h2>
+
+<!-- TRIAL MODAL -->
+<div class="overlay" id="trialModal">
+  <div class="modal">
+    <div class="modal-icon">🏪</div>
+    <div class="modal-title">Start Your Free Trial</div>
+    <div class="modal-sub">6 ساعات كاملة لتجربة المنصة — منتجات، طلبات، AI، وأكثر. لا يلزم بطاقة.</div>
+    <div class="modal-input-row">
+      <label>اسمك</label>
+      <input type="text" id="trialName" placeholder="Ahmed Hassan">
+    </div>
+    <div class="modal-input-row">
+      <label>اسم المتجر</label>
+      <input type="text" id="trialStore" placeholder="Tech Zone Egypt">
+    </div>
+    <div class="warning-box">
+      🔒 التجربة مرتبطة بهذا الجهاز. محاولة إعادة التجربة من نفس المتصفح ستُكشف وتُمنع تلقائياً.
+    </div>
+    <button class="btn btn-gold btn-lg" style="width:100%" onclick="startTrial()">ابدأ التجربة المجانية ←</button>
+    <p style="font-size:11px;color:var(--text3);margin-top:12px">عندك حساب؟ <span style="color:var(--gold);cursor:pointer" onclick="closeTrialModal()">سجل دخولك</span></p>
+  </div>
+</div>
+
+<!-- EXPIRED LOCK -->
+<div class="lock-overlay hidden" id="lockOverlay">
+  <div class="lock-card">
+    <div class="lock-icon">🔒</div>
+    <div class="lock-title">انتهت فترة التجربة</div>
+    <div class="lock-sub">انتهت الـ 6 ساعات المجانية. اشترك الآن لفتح متجرك والاحتفاظ بجميع منتجاتك وطلباتك.</div>
+    <div class="lock-pills">
+      <div class="lock-pill">كل البيانات محفوظة ✓</div>
+      <div class="lock-pill">المنتجات سليمة ✓</div>
+    </div>
+    <button class="btn btn-gold btn-xl" style="width:100%;margin-bottom:12px" onclick="showPricing()">اشترك الآن — 250 جنيه / شهر ←</button>
+    <p style="font-size:11px;color:var(--text3)">عندك سؤال؟ <span style="color:var(--gold);cursor:pointer">تواصل مع الدعم</span></p>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">Trustify <span>منصة التجارة الإلكترونية</span></div>
+  <div class="nav-links">
+    <span class="nav-link" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">المميزات</span>
+    <span class="nav-link" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">الأسعار</span>
+    <span class="nav-link" onclick="sendPrompt('كيف يعمل نظام الدروب شيبنج في Trustify؟')">Dropshipping ↗</span>
+  </div>
+  <div class="nav-cta">
+    <button class="btn btn-outline" onclick="closeTrialModal()">تسجيل الدخول</button>
+    <button class="btn btn-gold" onclick="document.getElementById('trialModal').classList.remove('hidden')">ابدأ مجاناً</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge"><span class="badge-dot"></span> متاح الآن للتجار المصريين</div>
+  <h1 class="hero-title">افتح متجرك في <em>6 دقايق</em>.<br>كبّره في <em>6 شهور</em>.</h1>
+  <p class="hero-sub">المنصة الشاملة للتجار المصريين — إدارة منتجات، دعم بالـ AI، دروب شيبنج، ودفع عبر فودافون كاش.</p>
+  <div class="hero-actions">
+    <button class="btn btn-gold btn-xl" onclick="document.getElementById('trialModal').classList.remove('hidden')">ابدأ تجربة 6 ساعات مجاناً</button>
+    <button class="btn btn-outline btn-lg" onclick="sendPrompt('أعطني جولة في لوحة التحكم')">شوف الديمو ↗</button>
+  </div>
+  <p class="trial-info">✓ بدون بطاقة بنكية &nbsp;·&nbsp; ✓ وصول كامل 6 ساعات &nbsp;·&nbsp; ✓ بياناتك محفوظة بعد التجربة</p>
+</div>
+
+<!-- TIMER BANNER -->
+<div class="timer-banner hidden" id="timerBanner">
+  <div class="timer-label"><strong>التجربة شغّالة 🟢</strong>الوقت المتبقي في تجربتك المجانية</div>
+  <div class="timer-digits">
+    <div class="timer-block"><span class="timer-num" id="tHr">05</span><div class="timer-unit">ساعات</div></div>
+    <span class="timer-sep">:</span>
+    <div class="timer-block"><span class="timer-num" id="tMin">59</span><div class="timer-unit">دقايق</div></div>
+    <span class="timer-sep">:</span>
+    <div class="timer-block"><span class="timer-num" id="tSec">59</span><div class="timer-unit">ثواني</div></div>
+  </div>
+  <button class="btn btn-gold" onclick="showPricing()">اشترك — 250 جنيه / شهر</button>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item"><span class="stat-num">500+</span><div class="stat-desc">تاجر نشط</div></div>
+  <div class="stat-item"><span class="stat-num">50K+</span><div class="stat-desc">محادثة AI</div></div>
+  <div class="stat-item"><span class="stat-num">98%</span><div class="stat-desc">رضا العملاء</div></div>
+  <div class="stat-item"><span class="stat-num">6hrs</span><div class="stat-desc">تجربة مجانية كاملة</div></div>
+</div>
+
+<!-- FEATURES -->
+<div class="section" id="features">
+  <div class="section-label">مميزات المنصة</div>
+  <div class="section-title">كل اللي التاجر محتاجه في مكان واحد</div>
+  <div class="features-grid">
+    <div class="feat-card"><span class="feat-icon">📦</span><div class="feat-title">إدارة منتجات Kanban</div><div class="feat-desc">أضف وعدّل وراقب مخزونك من بورد بصري سهل زي Odoo.</div></div>
+    <div class="feat-card"><span class="feat-icon">🤖</span><div class="feat-title">دعم عملاء بالـ AI</div><div class="feat-desc">شات بوت يرد على عملاءك 24/7 بشكل تلقائي على واجهة متجرك.</div></div>
+    <div class="feat-card"><span class="feat-icon">🔗</span><div class="feat-title">محرك دروب شيبنج</div><div class="feat-desc">ربط رابط المورد، حدد هامش ربحك، والسيستم يحسب سعر البيع تلقائياً.</div></div>
+    <div class="feat-card"><span class="feat-icon">📱</span><div class="feat-title">دفع فودافون كاش</div><div class="feat-desc">استلم مدفوعاتك عبر فودافون كاش مع تحقق إداري تلقائي.</div></div>
+    <div class="feat-card"><span class="feat-icon">👁️</span><div class="feat-title">Owner War Room</div><div class="feat-desc">لوحة تحكم كاملة لمراقبة التجار والإيرادات والاشتراكات في الوقت الفعلي.</div></div>
+    <div class="feat-card"><span class="feat-icon">💬</span><div class="feat-title">طلبات عبر واتساب</div><div class="feat-desc">العميل يطلب بضغطة واحدة على واتساب — checkout بدون أي احتكاك.</div></div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="section" id="pricing">
+  <div class="section-label">خطط الأسعار</div>
+  <div class="section-title">أسعار واضحة وبدون مفاجآت</div>
+  <div class="pricing-grid">
+    <div class="plan-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">مجاني <span>6 ساعات</span></div>
+      <div class="plan-desc">جرب كل شيء قبل ما تقرر</div>
+      <ul class="plan-features">
+        <li><span class="plan-check">✓</span> وصول كامل للوحة التحكم</li>
+        <li><span class="plan-check">✓</span> حتى 10 منتجات</li>
+        <li><span class="plan-check">✓</span> شات AI</li>
+        <li><span class="plan-check">✓</span> طلبات واتساب</li>
+      </ul>
+      <button class="btn btn-outline" style="width:100%" onclick="document.getElementById('trialModal').classList.remove('hidden')">ابدأ التجربة</button>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-badge">الأكثر شيوعاً</div>
+      <div class="plan-name">Professional</div>
+      <div class="plan-price">250 <span>جنيه / شهر</span></div>
+      <div class="plan-desc">للتجار الجادين اللي عايزين يكبّروا</div>
+      <ul class="plan-features">
+        <li><span class="plan-check">✓</span> منتجات غير محدودة</li>
+        <li><span class="plan-check">✓</span> أدوات دروب شيبنج</li>
+        <li><span class="plan-check">✓</span> تحليلات متقدمة</li>
+        <li><span class="plan-check">✓</span> أولوية دعم AI</li>
+        <li><span class="plan-check">✓</span> واجهة متجر مخصصة</li>
+        <li><span class="plan-check">✓</span> فودافون كاش موثّق</li>
+      </ul>
+      <button class="btn btn-gold" style="width:100%" onclick="sendPrompt('أريد الاشتراك في خطة Professional — 250 جنيه شهرياً')">اشترك الآن ←</button>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Business</div>
+      <div class="plan-price">Custom <span>سعر خاص</span></div>
+      <div class="plan-desc">للعمليات الكبيرة والحجم العالي</div>
+      <ul class="plan-features">
+        <li><span class="plan-check">✓</span> كل مميزات Pro</li>
+        <li><span class="plan-check">✓</span> مدير حساب مخصص</li>
+        <li><span class="plan-check">✓</span> API access</li>
+        <li><span class="plan-check">✓</span> White-label</li>
+        <li><span class="plan-check">✓</span> SLA مضمون</li>
+      </ul>
+      <button class="btn btn-outline" style="width:100%" onclick="sendPrompt('أريد معرفة تفاصيل خطة Business')">تواصل معنا ↗</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p class="footer-text">© 2025 Trustify — للتجار المصريين &nbsp;·&nbsp; <span style="color:var(--gold)">مدعوم بالـ AI</span></p>
+</footer>
+
+<script>
+const TRIAL_KEY='trustify_trial_v2';
+const DEVICE_KEY='trustify_device_v2';
+
+function getDeviceId(){
+  let id=localStorage.getItem(DEVICE_KEY);
+  if(!id){id='dev_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem(DEVICE_KEY,id);}
+  return id;
+}
+
+function checkExistingTrial(){
+  const data=JSON.parse(localStorage.getItem(TRIAL_KEY)||'null');
+  if(!data)return;
+  const elapsed=(Date.now()-data.startTime)/1000;
+  if(elapsed>=21600){showLock();return;}
+  document.getElementById('trialModal').classList.add('hidden');
+  document.getElementById('timerBanner').classList.remove('hidden');
+  startCountdown(data.startTime);
+}
+
+function startTrial(){
+  const deviceId=getDeviceId();
+  const existing=JSON.parse(localStorage.getItem(TRIAL_KEY)||'null');
+  if(existing&&existing.deviceId===deviceId&&existing.used){
+    alert('⚠ التجربة استُخدمت بالفعل على هذا الجهاز. يرجى الاشتراك للاستمرار.');
+    return;
+  }
+  const name=document.getElementById('trialName').value.trim()||'Merchant';
+  const store=document.getElementById('trialStore').value.trim()||'My Store';
+  localStorage.setItem(TRIAL_KEY,JSON.stringify({startTime:Date.now(),name,store,deviceId,used:true}));
+  document.getElementById('trialModal').classList.add('hidden');
+  document.getElementById('timerBanner').classList.remove('hidden');
+  startCountdown(Date.now());
+}
+
+function startCountdown(startTime){
+  const interval=setInterval(()=>{
+    const remaining=Math.max(0,21600-Math.floor((Date.now()-startTime)/1000));
+    if(remaining===0){clearInterval(interval);showLock();return;}
+    const h=Math.floor(remaining/3600);
+    const m=Math.floor((remaining%3600)/60);
+    const s=remaining%60;
+    document.getElementById('tHr').textContent=String(h).padStart(2,'0');
+    document.getElementById('tMin').textContent=String(m).padStart(2,'0');
+    document.getElementById('tSec').textContent=String(s).padStart(2,'0');
+  },1000);
+}
+
+function showLock(){
+  document.getElementById('timerBanner').classList.add('hidden');
+  document.getElementById('lockOverlay').classList.remove('hidden');
+}
+function showPricing(){
+  document.getElementById('lockOverlay').classList.add('hidden');
+  document.getElementById('pricing').scrollIntoView({behavior:'smooth'});
+}
+function closeTrialModal(){
+  document.getElementById('trialModal').classList.add('hidden');
+}
+
+checkExistingTrial();
+</script>
