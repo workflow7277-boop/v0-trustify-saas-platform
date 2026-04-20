@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل مشترك جديد - Trustify</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-5">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <h2 class="text-2xl font-bold mb-4 text-center text-blue-600">فتح متجر جديد 🚀</h2>
+        <p class="text-sm text-gray-600 mb-6 text-center">قم بدفع مبلغ (250 ج.م) عبر انستا باي أو فودافون كاش لفتح متجرك.</p>
+        
+        <div class="space-y-4">
+            <input type="text" id="shopName" placeholder="اسم المتجر" class="w-full p-3 border rounded-lg">
+            <input type="text" id="fullName" placeholder="الاسم الكامل" class="w-full p-3 border rounded-lg">
+            <input type="tel" id="phone" placeholder="رقم الموبايل" class="w-full p-3 border rounded-lg">
+            
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <p class="text-xs font-bold mb-1">بيانات الدفع:</p>
+                <p class="text-sm">InstaPay: <code class="bg-white px-1">mohamed@instapay</code></p>
+                <p class="text-sm">فودافون كاش: <code class="bg-white px-1">010xxxxxxxx</code></p>
+            </div>
+
+            <button onclick="submitRequest()" class="w-full bg-blue-600 text-white p-4 rounded-lg font-bold hover:bg-blue-700 transition">
+                إرسال طلب التفعيل
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        async function submitRequest() {
+            const data = {
+                shopName: document.getElementById('shopName').value,
+                fullName: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                telegram_id: tg.initDataUnsafe.user.id
+            };
+            
+            // هنا السيستم الأوتوميشن بتاعك هيستلم البيانات دي
+            alert("تم إرسال طلبك! سيقوم الموظف الآلي بمراجعة الدفع وتفعيل متجرك.");
+            tg.close();
+        }
+    </script>
+</body>
+</html>
