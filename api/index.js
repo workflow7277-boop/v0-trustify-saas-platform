@@ -1,53 +1,53 @@
-const { Telegraf, Sessions } = require('telegraf'); // أضفنا خاصية الجلسات عشان البوت يفتكر أنت بتعمل إيه
+const { Telegraf } = require('telegraf');
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-// مصفوفة مؤقتة عشان البوت يفتكر الخطوات (للمبتدئين دي أسهل طريقة)
-let userState = {};
+bot.start((ctx) => ctx.reply("أهلاً يا محمد! عشان تضيف منتج جديد، ابعت رسالة بالشكل ده:\nاسم المنتج - السعر\n\nمثال:\nتيشرت - 200"));
 
-bot.start(async (ctx) => {
-    // كود التسجيل اللي عملناه قبل كدة (شغال زي ما هو)
-    ctx.reply("أهلاً بك! لو عايز تضيف منتج جديد، ابعت كلمة: إضافة");
-});
-
-bot.hears('إضافة', (ctx) => {
-    userState[ctx.from.id] = { step: 'waiting_for_name' };
-    ctx.reply("تمام يا بطل، قولي اسم المنتج إيه؟");
-});
-
+// كود بسيط جداً بيفهم الرسالة لو فيها علامة الـ (-)
 bot.on('text', async (ctx) => {
-    const userId = ctx.from.id;
-    const state = userState[userId];
+    const text = ctx.message.text;
+    
+    if (text.includes('-')) {
+        const parts = text.split('-');
+        const productName = parts[0].trim();
+        const productPrice = parseFloat(parts[1].trim());
 
-    if (state && state.step === 'waiting_for_name') {
-        userState[userId].name = ctx.message.text;
-        userState[userId].step = 'waiting_for_price';
-        ctx.reply(`جميل، منتج "${ctx.message.text}" سعره كام؟`);
-    } 
-    else if (state && state.step === 'waiting_for_price') {
-        const price = parseFloat(ctx.message.text);
-        if (isNaN(price)) return ctx.reply("يا محمد، اكتب السعر بالأرقام بس عشان السيستم يفهم.");
-
-        // هنجيب الـ ID بتاعك من جدول المشتركين
-        const { data: user } = await supabase.from('subscribers').select('id').eq('telegram_id', userId).single();
-
-        // حفظ المنتج في جدول المنتجات
-        const { error } = await supabase.from('products').insert([
-            { subscriber_id: user.id, name: state.name, price: price }
-        ]);
-
-        if (error) {
-            ctx.reply("حصلت مشكلة وأنا بحفظ المنتج: " + error.message);
-        } else {
-            ctx.reply(`مبروك! منتج "${state.name}" اتضاف بنجاح بسعر ${price} جنيه.`);
+        if (isNaN(productPrice)) {
+            return ctx.reply("يا محمد، اكتب السعر صح بعد علامة الـ (-) .. لازم يكون رقم.");
         }
-        delete userState[userId]; // تصفير الحالة عشان نبدأ من جديد
+
+        try {
+            // 1. بنجيب الـ ID بتاعك من سوبابيس
+            const { data: user } = await supabase
+                .from('subscribers')
+                .select('id')
+                .eq('telegram_id', ctx.from.id)
+                .single();
+
+            // 2. بنضيف المنتج في الجدول
+            const { error } = await supabase.from('products').insert([
+                { subscriber_id: user.id, name: productName, price: productPrice }
+            ]);
+
+            if (error) throw error;
+
+            ctx.reply(`✅ تم إضافة "${productName}" بسعر ${productPrice} جنيه بنجاح!`);
+        } catch (e) {
+            ctx.reply("حصل خطأ: تأكد إنك عملت جدول products في سوبابيس.");
+        }
+    } else {
+        ctx.reply("مش فاهمك يا محمد، ابعت اسم المنتج وبعده سعره وبينهم علامة (-)");
     }
 });
 
 module.exports = async (req, res) => {
-    await bot.handleUpdate(req.body);
-    res.status(200).send('OK');
+    try {
+        await bot.handleUpdate(req.body);
+        res.status(200).send('OK');
+    } catch (e) {
+        res.status(200).send('Error'); // بنرجع 200 عشان فيرسل ميعلقش
+    }
 };
