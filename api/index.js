@@ -1,7 +1,6 @@
 const { Telegraf } = require('telegraf');
 const { createClient } = require('@supabase/supabase-js');
 
-// استدعاء المفاتيح اللي لسه ضايفينها في Vercel
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -9,29 +8,27 @@ bot.start(async (ctx) => {
     try {
         const { id, first_name, username } = ctx.from;
 
-        // 1. تسجيل أو تحديث بيانات التاجر في جدول subscribers
+        // محاولة إدخال البيانات
         const { error } = await supabase
             .from('subscribers')
-            .upsert([
-                { 
-                    telegram_id: id, 
-                    username: username || 'N/A', 
-                    shop_name: `${first_name} Store`,
-                    created_at: new Date()
-                }
-            ]);
+            .upsert({ 
+                telegram_id: id, 
+                username: username || 'N/A', 
+                shop_name: `${first_name} Store`
+            }, { onConflict: 'telegram_id' });
 
-        if (error) throw error;
+        if (error) {
+            // لو فيه خطأ، ابعت رسالة الخطأ الحقيقية عشان نفهمها
+            return ctx.reply(`خطأ في قاعدة البيانات: ${error.message}\nكود الخطأ: ${error.code}`);
+        }
 
-        await ctx.reply(`أهلاً بك يا ${first_name} في عائلة Trustify! 🚀\n\nتم تسجيل متجرك بنجاح في قاعدة البيانات. ابدأ الآن بإضافة منتجاتك لبناء إمبراطوريتك.`);
+        await ctx.reply(`أهلاً بك يا ${first_name} في عائلة Trustify! 🚀\n\nتم تسجيل متجرك بنجاح في قاعدة البيانات.`);
     } catch (e) {
-        console.error("Supabase Error:", e.message);
-        await ctx.reply("أهلاً بك! البوت شغال، بس فيه تكة في قاعدة البيانات (تأكد من وجود جدول اسمه subscribers).");
+        await ctx.reply("حدث خطأ غير متوقع في السيرفر.");
     }
 });
 
-// استقبال الرسائل النصية للتجربة
-bot.on('text', (ctx) => ctx.reply('وصلتني رسالتك وجاري معالجتها في نظام Trustify..'));
+bot.on('text', (ctx) => ctx.reply('رسالتك وصلت للسيرفر، جاري العمل على نظام Trustify..'));
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
@@ -39,9 +36,9 @@ module.exports = async (req, res) => {
             await bot.handleUpdate(req.body);
             res.status(200).send('OK');
         } catch (err) {
-            res.status(500).send('Internal Error');
+            res.status(500).send('Error');
         }
     } else {
-        res.status(200).send('<h1>Trustify Server is Online</h1>');
+        res.status(200).send('Trustify Server Running');
     }
 };
