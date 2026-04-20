@@ -1,10 +1,37 @@
 const { Telegraf } = require('telegraf');
+const { createClient } = require('@supabase/supabase-js');
 
-// استخدام التوكن مباشرة للتجربة القاطعة
+// استدعاء المفاتيح اللي لسه ضايفينها في Vercel
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.start((ctx) => ctx.reply('تم بنجاح! السيرفر استلم الرسالة ويرد عليك الآن 🚀'));
-bot.on('text', (ctx) => ctx.reply('وصلتني رسالتك: ' + ctx.message.text));
+bot.start(async (ctx) => {
+    try {
+        const { id, first_name, username } = ctx.from;
+
+        // 1. تسجيل أو تحديث بيانات التاجر في جدول subscribers
+        const { error } = await supabase
+            .from('subscribers')
+            .upsert([
+                { 
+                    telegram_id: id, 
+                    username: username || 'N/A', 
+                    shop_name: `${first_name} Store`,
+                    created_at: new Date()
+                }
+            ]);
+
+        if (error) throw error;
+
+        await ctx.reply(`أهلاً بك يا ${first_name} في عائلة Trustify! 🚀\n\nتم تسجيل متجرك بنجاح في قاعدة البيانات. ابدأ الآن بإضافة منتجاتك لبناء إمبراطوريتك.`);
+    } catch (e) {
+        console.error("Supabase Error:", e.message);
+        await ctx.reply("أهلاً بك! البوت شغال، بس فيه تكة في قاعدة البيانات (تأكد من وجود جدول اسمه subscribers).");
+    }
+});
+
+// استقبال الرسائل النصية للتجربة
+bot.on('text', (ctx) => ctx.reply('وصلتني رسالتك وجاري معالجتها في نظام Trustify..'));
 
 module.exports = async (req, res) => {
     if (req.method === 'POST') {
@@ -12,10 +39,9 @@ module.exports = async (req, res) => {
             await bot.handleUpdate(req.body);
             res.status(200).send('OK');
         } catch (err) {
-            console.error(err);
-            res.status(500).send('Error in bot');
+            res.status(500).send('Internal Error');
         }
     } else {
-        res.status(200).send('<h1>Bot is running...</h1>');
+        res.status(200).send('<h1>Trustify Server is Online</h1>');
     }
 };
