@@ -1,18 +1,44 @@
-const { Telegraf } = require('telegraf');
+const { createClient } = require("@supabase/supabase-js");
 
-const bot = new Telegraf('8690355510:AAFMIobn1eE3p0uw48SeMsKNWdn65gso_VA');
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
-bot.start((ctx) => ctx.reply("✅ مبروك يا محمد! نقلنا لـ Render والبوت اشتغل أخيراً."));
-bot.on('text', (ctx) => ctx.reply(`وصلت رسالتك على السيرفر الجديد: ${ctx.message.text}`));
+const TOKEN = process.env.TELEGRAM_TOKEN;
+const API = `https://api.telegram.org/bot${TOKEN}`;
 
-// تشغيل البوت مباشرة
-bot.launch().then(() => {
-    console.log("Bot is running on Render...");
-});
+// إرسال رسالة
+async function sendMessage(chatId, text, keyboard = null) {
+  const body = {
+    chat_id: chatId,
+    text,
+    parse_mode: "HTML",
+  };
+  if (keyboard) body.reply_markup = keyboard;
 
-// لمنع السيرفر من التوقف
-const http = require('http');
-http.createServer((req, res) => {
-    res.write('Trustify is Live on Render!');
-    res.end();
-}).listen(process.env.PORT || 3000);
+  await fetch(`${API}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+// معالجة الرسائل
+async function handleMessage(msg) {
+  const chatId = msg.chat.id;
+  const text = msg.text || "";
+  const user = msg.from;
+
+  // تسجيل المستخدم
+  await supabase.from("users").upsert(
+    { telegram_id: user.id, username: user.username, first_name: user.first_name },
+    { onConflict: "telegram_id" }
+  );
+
+  // ─── الأوامر ───────────────────────────────────────────
+  if (text === "/start") {
+    const keyboard = {
+      inline_keyboard: [
+        [{ text: "🛍️ المنتجات", callback_data: "products" },
+         { text: "🛒 سلة
