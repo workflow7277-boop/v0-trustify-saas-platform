@@ -1,26 +1,21 @@
 const { Telegraf } = require('telegraf');
 
-// استخدم التوكن مباشرة عشان نقطع الشك باليقين في الـ Environment Variables
+// التوكن مباشر عشان نقطع الشك باليقين
 const bot = new Telegraf('8690355510:AAFMIobn1eE3p0uw48SeMsKNWdn65gso_VA');
 
-bot.start((ctx) => {
-    console.log("Start command received");
-    return ctx.reply("✅ Trustify يعمل بنجاح يا محمد! إحنا كدة عدينا مرحلة الربط.");
-});
-
-bot.on('message', (ctx) => {
-    return ctx.reply("وصلت الرسالة!");
-});
+bot.start((ctx) => ctx.reply("✅ أخيراً نطقنا يا محمد! السيرفر شغال والربط سليم. طمني؟"));
+bot.on('message', (ctx) => ctx.reply("وصلت الرسالة يا هندسة!"));
 
 module.exports = async (req, res) => {
     try {
-        if (req.method === 'POST') {
+        if (req.method === 'POST' && req.body) {
             await bot.handleUpdate(req.body);
             return res.status(200).send('OK');
         }
-        res.status(200).send('Server is running!');
+        res.status(200).send('Server is Up!');
     } catch (err) {
-        console.error("CRITICAL ERROR:", err);
-        res.status(200).send('Error but keeping server alive'); // عشان ميديناش 500 تاني
+        // ده عشان السيرفر ميديناش 500 تانى حتى لو فيه غلطة
+        console.error(err);
+        res.status(200).send('Error Handled'); 
     }
 };
